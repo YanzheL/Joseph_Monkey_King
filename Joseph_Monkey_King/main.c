@@ -17,7 +17,7 @@ typedef struct{
 	int data;
 }SCirList;
 
-int INIT_MEMORY(SCirList* mem,int len)
+int INIT_S_MEM(SCirList* mem,int len)
 {
 	for (int i=0; i<len-1; ++i) {
 		mem[i].next=i+1;
@@ -26,7 +26,7 @@ int INIT_MEMORY(SCirList* mem,int len)
 	return OK;
 }
 
-int NEW_MEMORY(SCirList* mem)
+int NEW_S_MEM(SCirList* mem)
 {
 	int top=mem[0].next;
 	if (top) {
@@ -35,7 +35,7 @@ int NEW_MEMORY(SCirList* mem)
 	return top;
 }
 
-void FREE_MEM(SCirList* mem,int index)
+void FREE_S_MEM(SCirList* mem,int index)
 {
 	mem[index].next=mem[0].next;
 	mem[0].next=index;
@@ -45,14 +45,12 @@ int CREATE_CIRCLE(SCirList* circle,int n)
 {
 	int prev=0,q=0;
 	for (int i=n; i>0; --i) {
-		int p=NEW_MEMORY(circle);
-		if (!p){
-			return OVERFLOW;
-		}
+		int p=NEW_S_MEM(circle);
+		if (!p) return OVERFLOW;
 		circle[p].data=i;
 		circle[p].next=prev;
 		prev=p;
-		if (i==n){
+		if (i==n) {
 			q=p;
 		}
 	}
@@ -79,7 +77,7 @@ int FIND_KING(int startPos,int persons,int startDiv,int* queue)
 	if (startPos>persons) return ERROR;
 	SCirList* circle=(SCirList*)calloc(persons+1, sizeof(SCirList));
 	if (!circle) return OVERFLOW;
-	if (INIT_MEMORY(circle,persons+1)!=OK||CREATE_CIRCLE(circle, persons)!=OK) return ERROR;
+	if (INIT_S_MEM(circle,persons+1)!=OK||CREATE_CIRCLE(circle, persons)!=OK) return ERROR;
 	int head=circle[1].next;
 	int p=head,curDiv=startDiv,resultCount=0;
 	while (p) {
@@ -96,7 +94,7 @@ int FIND_KING(int startPos,int persons,int startDiv,int* queue)
 			if (curDiv!=2) {
 				p=circle[p].next;
 			}
-			FREE_MEM(circle,q);
+			FREE_S_MEM(circle,q);
 		}
 		if (curDiv>1) {
 			--curDiv;
@@ -116,7 +114,7 @@ void Safe_Flush(FILE *fp)
 }
 
 /* Safe input integer */
-void SafeInputParameter(char *display,int *para)
+void SafeInputParameter_Int(char *display,int *para)
 {
 	while (1) {
 		puts(display);
@@ -131,9 +129,9 @@ void SafeInputParameter(char *display,int *para)
 
 int main(int argc, const char * argv[]) {
 	int startPos,div,persons;
-	SafeInputParameter("Please input number of monkeys", &persons);
-	SafeInputParameter("Please input start position", &startPos);
-	SafeInputParameter("Please input division", &div);
+	SafeInputParameter_Int("Please input number of monkeys", &persons);
+	SafeInputParameter_Int("Please input start position", &startPos);
+	SafeInputParameter_Int("Please input division", &div);
 	int *que=(int*)calloc(persons, sizeof(int)),status;
 	if ((status=FIND_KING(startPos, persons, div,que))!=OK){
 		switch (status) {
