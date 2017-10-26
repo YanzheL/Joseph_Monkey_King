@@ -17,7 +17,7 @@ typedef struct{
 	int data;
 }SCirList;
 
-int INIT_S_MEM(SCirList* mem,int len)
+int INIT_S_MEM(SCirList* mem,const int len)
 {
 	for (int i=0; i<len-1; ++i) {
 		mem[i].next=i+1;
@@ -28,20 +28,20 @@ int INIT_S_MEM(SCirList* mem,int len)
 
 int NEW_S_MEM(SCirList* mem)
 {
-	int top=mem[0].next;
+	const int top=mem[0].next;
 	if (top) {
 		mem[0].next=mem[top].next;
 	}
 	return top;
 }
 
-void FREE_S_MEM(SCirList* mem,int index)
+void FREE_S_MEM(SCirList* mem,const int index)
 {
 	mem[index].next=mem[0].next;
 	mem[0].next=index;
 }
 
-int CREATE_CIRCLE(SCirList* circle,int n)
+int CREATE_CIRCLE(SCirList* circle,const int n)
 {
 	int prev=0,q=0;
 	for (int i=n; i>0; --i) {
@@ -72,13 +72,13 @@ int CREATE_CIRCLE(SCirList* circle,int n)
  Find the last one in circle and get store stack out order
  @param queue : store stack out order, length=persons
  */
-int FIND_KING(int startPos,int persons,int startDiv,int* queue)
+int FIND_KING(const int startPos,const int persons,const int startDiv,int* queue)
 {
 	if (startPos>persons) return ERROR;
 	SCirList* circle=(SCirList*)calloc(persons+1, sizeof(SCirList));
 	if (!circle) return OVERFLOW;
 	if (INIT_S_MEM(circle,persons+1)!=OK||CREATE_CIRCLE(circle, persons)!=OK) return ERROR;
-	int head=circle[1].next;
+	const int head=circle[1].next;
 	int p=head,curDiv=startDiv,resultCount=0;
 	while (p) {
 		for (int i=1; i<curDiv-1; ++i) {
@@ -87,7 +87,7 @@ int FIND_KING(int startPos,int persons,int startDiv,int* queue)
 		const int q=circle[p].next;
 		queue[resultCount]=circle[q].data;
 		++resultCount;
-		if (circle[p].next==p) {
+		if (q==p) {
 			p=0;
 		}else{
 			circle[p].next=circle[q].next;
@@ -114,7 +114,7 @@ void Safe_Flush(FILE *fp)
 }
 
 /* Safe input integer */
-void SafeInputParameter_Int(char *display,int *para)
+void SafeInputParameter_Int(const char *display,int *para)
 {
 	while (1) {
 		puts(display);
